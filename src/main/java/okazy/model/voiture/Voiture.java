@@ -44,7 +44,7 @@ public class Voiture {
         joinColumns = @JoinColumn(name = "idvoiture") ,
         inverseJoinColumns = @JoinColumn(name = "idoptiondivertissement")
     )
-    private List<OptionDivertisement> optionDivertisements;
+    private List<OptionDivertissement> optionDivertisements;
     @ManyToMany
     @JoinTable(
             name = "voiture_optionsecurite",
@@ -151,11 +151,11 @@ public class Voiture {
         this.systemeFreinage = systemeFreinage;
     }
 
-    public List<OptionDivertisement> getOptionDivertisements() {
+    public List<OptionDivertissement> getOptionDivertisements() {
         return optionDivertisements;
     }
 
-    public void setOptionDivertisements(List<OptionDivertisement> optionDivertisements) {
+    public void setOptionDivertisements(List<OptionDivertissement> optionDivertisements) {
         this.optionDivertisements = optionDivertisements;
     }
 

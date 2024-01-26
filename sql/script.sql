@@ -77,7 +77,6 @@ CREATE TABLE voiture_optionsecurite (
     idoptionsecutite INT REFERENCES optionsecurite
 );
 
-
 CREATE TABLE role(
     id SERIAL PRIMARY KEY ,
     nom VARCHAR
@@ -89,4 +88,15 @@ CREATE TABLE utilisateur(
     username VARCHAR UNIQUE ,
     password VARCHAR(16),
     idrole INT REFERENCES role
+);
+
+CREATE TABLE annonce(
+    id SERIAL PRIMARY KEY ,
+    date DATE ,
+    titre VARCHAR ,
+    description VARCHAR ,
+    idutilisateur INT REFERENCES utilisateur,
+    idvoiture INT REFERENCES voiture ,
+    prix DOUBLE PRECISION ,
+    state INT
 );

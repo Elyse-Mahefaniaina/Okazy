@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/boitevitesse")
+@RequestMapping("/boitevitesses")
 public class BoiteVitesseController {
 
     private final BoiteVitesseService boiteVitesseService;
@@ -26,28 +26,28 @@ public class BoiteVitesseController {
     @GetMapping
     public ResponseEntity<Result> findAll() {
         List<BoiteVitesse> boiteVitesses = boiteVitesseService.findAll();
-        return new ResponseEntity<>(new Result("OK", null, boiteVitesses), HttpStatus.OK);
+        return new ResponseEntity<>(new Result("OK", "", boiteVitesses), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
         Optional<BoiteVitesse> boiteVitesse = boiteVitesseService.findById(id);
-        return boiteVitesse.map( value -> new ResponseEntity<>(new Result("OK", null, boiteVitesse), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", null, null), HttpStatus.NOT_FOUND));
+        return boiteVitesse.map( value -> new ResponseEntity<>(new Result("OK", "", boiteVitesse), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody BoiteVitesse boiteVitesse) {
         BoiteVitesse bv = boiteVitesseService.save(boiteVitesse);
-        return new ResponseEntity<>(new Result("CREATED", null, bv), HttpStatus.CREATED);
+        return new ResponseEntity<>(new Result("CREATED", "", bv), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody BoiteVitesse boiteVitesse) {
         BoiteVitesse bv = boiteVitesseService.update(id, boiteVitesse);
-        return new ResponseEntity<>(new Result("UPDATED", null, bv), HttpStatus.OK);
+        return new ResponseEntity<>(new Result("UPDATED", "", bv), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -57,10 +57,10 @@ public class BoiteVitesseController {
 
         if (boiteVitesse.isPresent()) {
             boiteVitesseService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", null, null), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(new Result("NOT FOUND", null, null), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

@@ -32,7 +32,7 @@ public class VoitureController {
     public ResponseEntity<Result> getVoitureById(@PathVariable int id) {
         Optional<Voiture> voiture = voitureService.findById(id);
         return voiture.map(value -> new ResponseEntity<>(new Result("OK", "", voiture), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("Not Found", "", null), HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -50,7 +50,7 @@ public class VoitureController {
             Voiture updatedVoiture = voitureService.update(id, voiture);
             return new ResponseEntity<>(new Result("Updated", "", updatedVoiture), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new Result("Not Found", "", null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -60,9 +60,9 @@ public class VoitureController {
         Optional<Voiture> existingVoiture = voitureService.findById(id);
         if (existingVoiture.isPresent()) {
             voitureService.delete(id);
-            return new ResponseEntity<>(new Result("Deleted", "", null), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new Result("Deleted", "", ""), HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(new Result("Not Found", "", null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
         }
     }
 }
