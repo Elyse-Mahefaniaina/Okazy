@@ -55,27 +55,10 @@ CREATE TABLE voiture (
     puissancefiscale DOUBLE PRECISION,
     cylindre DOUBLE PRECISION,
     puissancemoteur DOUBLE PRECISION,
-    idboitevitesse INT REFERENCES boitevitesse ,
-    idsourceenergie INT REFERENCES sourceenergie ,
-    idsuspension INT REFERENCES syspension ,
     idcassis INT REFERENCES cassis ,
-    idsystemedirection INT REFERENCES systemdirection ,
-    idsystemefreinage INT REFERENCES systemefreinage ,
     nombreporte INT ,
     nombreplace INT ,
     miseencirculation DATE
-);
-
-CREATE TABLE voiture_optiondivertissement(
-    id SERIAL PRIMARY KEY ,
-    idvoiture INT REFERENCES voiture ,
-    idoptiondivertissement INT REFERENCES optiondivertisement
-);
-
-CREATE TABLE voiture_optionsecurite (
-    id SERIAL PRIMARY KEY ,
-    idvoiture INT REFERENCES voiture,
-    idoptionsecutite INT REFERENCES optionsecurite
 );
 
 CREATE TABLE role(
@@ -98,10 +81,27 @@ CREATE TABLE annonce(
     description VARCHAR ,
     idutilisateur INT REFERENCES utilisateur,
     idvoiture INT REFERENCES voiture ,
+    idsystemedirection INT REFERENCES systemdirection ,
+    idsystemefreinage INT REFERENCES systemefreinage ,
+    idboitevitesse INT REFERENCES boitevitesse ,
+    idsourceenergie INT REFERENCES sourceenergie ,
+    idsuspension INT REFERENCES syspension ,
     couleurInterieur VARCHAR ,
     couleurExterieur VARCHAR ,
     prix DOUBLE PRECISION ,
     state INT
+);
+
+CREATE TABLE annonce_optiondivertissement(
+    id SERIAL PRIMARY KEY ,
+    idannonce INT REFERENCES voiture ,
+    idoptiondivertissement INT REFERENCES optiondivertisement
+);
+
+CREATE TABLE annonce_optionsecurite (
+    id SERIAL PRIMARY KEY ,
+    idannonce INT REFERENCES voiture,
+    idoptionsecutite INT REFERENCES optionsecurite
 );
 
 CREATE TABLE voiture_annonce_photo (

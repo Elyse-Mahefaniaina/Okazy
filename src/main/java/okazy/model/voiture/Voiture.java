@@ -22,37 +22,8 @@ public class Voiture {
     private double cylindre;
     private double puissancemoteur;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idboitevitesse", referencedColumnName = "id")
-    private BoiteVitesse boiteVitesse;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idsourceenergie", referencedColumnName = "id")
-    private SourceEnergie sourceEnergie;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idsuspension", referencedColumnName = "id")
-    private Suspension suspension;
-    @ManyToOne(optional = false)
     @JoinColumn(name = "idcassis", referencedColumnName = "id")
     private Cassis cassis;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idsystemedirection", referencedColumnName = "id")
-    private SystemDirection systemDirection;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "idsystemefreinage", referencedColumnName = "id")
-    private SystemeFreinage systemeFreinage;
-    @ManyToMany
-    @JoinTable(
-        name = "voiture_optiondivertissement",
-        joinColumns = @JoinColumn(name = "idvoiture") ,
-        inverseJoinColumns = @JoinColumn(name = "idoptiondivertissement")
-    )
-    private List<OptionDivertissement> optionDivertisements;
-    @ManyToMany
-    @JoinTable(
-            name = "voiture_optionsecurite",
-            joinColumns = @JoinColumn(name = "idvoiture") ,
-            inverseJoinColumns = @JoinColumn(name = "idoptionsecutite")
-    )
-    private List<OptionSecurite> optionSecurites;
     private int nombreporte;
     private int nombreplace;
     private Date miseencirculation;
@@ -105,68 +76,12 @@ public class Voiture {
         this.puissancemoteur = puissancemoteur;
     }
 
-    public BoiteVitesse getBoiteVitesse() {
-        return boiteVitesse;
-    }
-
-    public void setBoiteVitesse(BoiteVitesse boiteVitesse) {
-        this.boiteVitesse = boiteVitesse;
-    }
-
-    public SourceEnergie getSourceEnergie() {
-        return sourceEnergie;
-    }
-
-    public void setSourceEnergie(SourceEnergie sourceEnergie) {
-        this.sourceEnergie = sourceEnergie;
-    }
-
-    public Suspension getSuspension() {
-        return suspension;
-    }
-
-    public void setSuspension(Suspension suspension) {
-        this.suspension = suspension;
-    }
-
     public Cassis getCassis() {
         return cassis;
     }
 
     public void setCassis(Cassis cassis) {
         this.cassis = cassis;
-    }
-
-    public SystemDirection getSystemDirection() {
-        return systemDirection;
-    }
-
-    public void setSystemDirection(SystemDirection systemDirection) {
-        this.systemDirection = systemDirection;
-    }
-
-    public SystemeFreinage getSystemeFreinage() {
-        return systemeFreinage;
-    }
-
-    public void setSystemeFreinage(SystemeFreinage systemeFreinage) {
-        this.systemeFreinage = systemeFreinage;
-    }
-
-    public List<OptionDivertissement> getOptionDivertisements() {
-        return optionDivertisements;
-    }
-
-    public void setOptionDivertisements(List<OptionDivertissement> optionDivertisements) {
-        this.optionDivertisements = optionDivertisements;
-    }
-
-    public List<OptionSecurite> getOptionSecurites() {
-        return optionSecurites;
-    }
-
-    public void setOptionSecurites(List<OptionSecurite> optionSecurites) {
-        this.optionSecurites = optionSecurites;
     }
 
     public int getNombreporte() {
