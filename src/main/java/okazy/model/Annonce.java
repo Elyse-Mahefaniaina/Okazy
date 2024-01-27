@@ -15,7 +15,7 @@ public class Annonce {
     private int id;
     private Date date;
     private String titre;
-    private String descritpion;
+    private String description;
     @ManyToOne(optional = false)
     @JoinColumn(name = "idutilisateur", referencedColumnName = "id")
     private Utilisateur utilisateur;
@@ -36,7 +36,7 @@ public class Annonce {
     private SystemDirection systemDirection;
     @ManyToOne(optional = false)
     @JoinColumn(name = "idsystemefreinage", referencedColumnName = "id")
-    private SystemeFreinage systemeFreinage;
+    private SystemFreinage systemeFreinage;
     @ManyToMany
     @JoinTable(
             name = "voiture_optiondivertissement",
@@ -51,7 +51,9 @@ public class Annonce {
             inverseJoinColumns = @JoinColumn(name = "idoptionsecutite")
     )
     private List<OptionSecurite> optionSecurites;
+    @Column(name = "couleurinterieur")
     private String couleurInterieur;
+    @Column(name = "couleurexterieur")
     private String couleurExterieur;
     private Double prix;
     private int state;
@@ -83,12 +85,12 @@ public class Annonce {
         this.titre = titre;
     }
 
-    public String getDescritpion() {
-        return descritpion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescritpion(String descritpion) {
-        this.descritpion = descritpion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Utilisateur getUtilisateur() {
@@ -139,11 +141,11 @@ public class Annonce {
         this.systemDirection = systemDirection;
     }
 
-    public SystemeFreinage getSystemeFreinage() {
+    public SystemFreinage getSystemeFreinage() {
         return systemeFreinage;
     }
 
-    public void setSystemeFreinage(SystemeFreinage systemeFreinage) {
+    public void setSystemeFreinage(SystemFreinage systemeFreinage) {
         this.systemeFreinage = systemeFreinage;
     }
 

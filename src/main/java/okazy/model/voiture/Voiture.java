@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import okazy.model.voiture.caracteristique.*;
 
 import java.sql.Date;
-import java.util.List;
 
 @Entity
 public class Voiture {

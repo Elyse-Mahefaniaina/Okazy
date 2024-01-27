@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 
 @Entity
 @Table( name = "systemefreinage")
-public class SystemeFreinage {
+public class SystemFreinage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
 
-    public SystemeFreinage(){}
+    public SystemFreinage(){}
 
     public int getId() {
         return id;

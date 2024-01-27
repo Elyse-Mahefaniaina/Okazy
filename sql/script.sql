@@ -33,7 +33,7 @@ CREATE TABLE sourceenergie (
     nom VARCHAR
 );
 
-CREATE TABLE syspension (
+CREATE TABLE suspension (
     id SERIAL PRIMARY KEY ,
     nom VARCHAR
 );
@@ -43,7 +43,7 @@ CREATE TABLE systemdirection (
     nom VARCHAR
 );
 
-CREATE TABLE systemefreinage (
+CREATE TABLE systemfreinage (
     id SERIAL PRIMARY KEY ,
     nom VARCHAR
 );
@@ -82,14 +82,20 @@ CREATE TABLE annonce(
     idutilisateur INT REFERENCES utilisateur,
     idvoiture INT REFERENCES voiture ,
     idsystemedirection INT REFERENCES systemdirection ,
-    idsystemefreinage INT REFERENCES systemefreinage ,
+    idsystemefreinage INT REFERENCES systemfreinage ,
     idboitevitesse INT REFERENCES boitevitesse ,
     idsourceenergie INT REFERENCES sourceenergie ,
-    idsuspension INT REFERENCES syspension ,
+    idsuspension INT REFERENCES suspension ,
     couleurInterieur VARCHAR ,
     couleurExterieur VARCHAR ,
     prix DOUBLE PRECISION ,
     state INT
+);
+
+CREATE TABLE voiture_annonce_photo (
+    id SERIAL PRIMARY KEY ,
+    idannonce INT REFERENCES annonce ,
+    photo VARCHAR
 );
 
 CREATE TABLE annonce_optiondivertissement(
@@ -102,10 +108,4 @@ CREATE TABLE annonce_optionsecurite (
     id SERIAL PRIMARY KEY ,
     idannonce INT REFERENCES voiture,
     idoptionsecutite INT REFERENCES optionsecurite
-);
-
-CREATE TABLE voiture_annonce_photo (
-    id SERIAL PRIMARY KEY ,
-    idannonce INT REFERENCES annonce ,
-    photo VARCHAR
 );
