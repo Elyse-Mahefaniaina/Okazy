@@ -62,7 +62,8 @@ CREATE TABLE voiture (
     idsystemedirection INT REFERENCES systemdirection ,
     idsystemefreinage INT REFERENCES systemefreinage ,
     nombreporte INT ,
-    nombreplace INT
+    nombreplace INT ,
+    miseencirculation DATE
 );
 
 CREATE TABLE voiture_optiondivertissement(
@@ -97,6 +98,14 @@ CREATE TABLE annonce(
     description VARCHAR ,
     idutilisateur INT REFERENCES utilisateur,
     idvoiture INT REFERENCES voiture ,
+    couleurInterieur VARCHAR ,
+    couleurExterieur VARCHAR ,
     prix DOUBLE PRECISION ,
     state INT
+);
+
+CREATE TABLE voiture_annonce_photo (
+    id SERIAL PRIMARY KEY ,
+    idannonce INT REFERENCES annonce ,
+    photo VARCHAR
 );

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import okazy.model.voiture.caracteristique.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -54,6 +55,7 @@ public class Voiture {
     private List<OptionSecurite> optionSecurites;
     private int nombreporte;
     private int nombreplace;
+    private Date miseencirculation;
 
     public int getId() {
         return id;
@@ -181,5 +183,13 @@ public class Voiture {
 
     public void setNombreplace(int nombreplace) {
         this.nombreplace = nombreplace;
+    }
+
+    public Date getMiseencirculation() {
+        return miseencirculation;
+    }
+
+    public void setMiseencirculation(Date miseencirculation) {
+        this.miseencirculation = miseencirculation;
     }
 }
