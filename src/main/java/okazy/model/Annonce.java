@@ -6,7 +6,8 @@ import okazy.model.voiture.Voiture;
 import okazy.model.voiture.caracteristique.*;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Annonce {
@@ -37,29 +38,29 @@ public class Annonce {
     @ManyToOne(optional = false)
     @JoinColumn(name = "idsystemefreinage", referencedColumnName = "id")
     private SystemFreinage systemeFreinage;
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
-            name = "voiture_optiondivertissement",
-            joinColumns = @JoinColumn(name = "idvoiture") ,
+            name = "annonce_optiondivertissement",
+            joinColumns = @JoinColumn(name = "idannonce") ,
             inverseJoinColumns = @JoinColumn(name = "idoptiondivertissement")
     )
-    private List<OptionDivertissement> optionDivertisements;
-    @ManyToMany
+    private Set<OptionDivertissement> optionDivertisements = new HashSet<>();
+    @ManyToMany()
     @JoinTable(
-            name = "voiture_optionsecurite",
-            joinColumns = @JoinColumn(name = "idvoiture") ,
+            name = "annonce_optionsecurite",
+            joinColumns = @JoinColumn(name = "idannonce") ,
             inverseJoinColumns = @JoinColumn(name = "idoptionsecutite")
     )
-    private List<OptionSecurite> optionSecurites;
+    private Set<OptionSecurite> optionSecurites = new HashSet<>();
     @Column(name = "couleurinterieur")
     private String couleurInterieur;
     @Column(name = "couleurexterieur")
     private String couleurExterieur;
     private Double prix;
     private int state;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "idannonce")
-    private List<AnnoncePhoto> photos;
+    private Set<AnnoncePhoto> photos = new HashSet<>();
 
     public int getId() {
         return id;
@@ -149,19 +150,19 @@ public class Annonce {
         this.systemeFreinage = systemeFreinage;
     }
 
-    public List<OptionDivertissement> getOptionDivertisements() {
+    public Set<OptionDivertissement> getOptionDivertisements() {
         return optionDivertisements;
     }
 
-    public void setOptionDivertisements(List<OptionDivertissement> optionDivertisements) {
+    public void setOptionDivertisements(Set<OptionDivertissement> optionDivertisements) {
         this.optionDivertisements = optionDivertisements;
     }
 
-    public List<OptionSecurite> getOptionSecurites() {
+    public Set<OptionSecurite> getOptionSecurites() {
         return optionSecurites;
     }
 
-    public void setOptionSecurites(List<OptionSecurite> optionSecurites) {
+    public void setOptionSecurites(Set<OptionSecurite> optionSecurites) {
         this.optionSecurites = optionSecurites;
     }
 
@@ -197,11 +198,11 @@ public class Annonce {
         this.state = state;
     }
 
-    public List<AnnoncePhoto> getPhotos() {
+    public Set<AnnoncePhoto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<AnnoncePhoto> photos) {
+    public void setPhotos(Set<AnnoncePhoto> photos) {
         this.photos = photos;
     }
 }

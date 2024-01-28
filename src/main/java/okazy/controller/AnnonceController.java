@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,14 @@ public class AnnonceController {
         this.utilisateurService = utilisateurService;
     }
 
+    @GetMapping("/rechercheAvancee")
+    public List<Annonce> rechercheAvanceeAnnonces(@RequestParam(required = false) String motCle,
+                                                  @RequestParam(required = false) Date dateMin,
+                                                  @RequestParam(required = false) Double prixMin,
+                                                  @RequestParam(required = false) String marque,
+                                                  @RequestParam(required = false) String modele) {
+        return annonceService.rechercheAvanceeAnnonces(motCle, dateMin, prixMin, marque, modele);
+    }
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
