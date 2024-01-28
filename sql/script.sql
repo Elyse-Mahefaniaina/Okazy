@@ -100,13 +100,13 @@ CREATE TABLE voiture_annonce_photo (
 
 CREATE TABLE annonce_optiondivertissement(
     id SERIAL PRIMARY KEY ,
-    idannonce INT REFERENCES voiture ,
+    idannonce INT REFERENCES annonce ,
     idoptiondivertissement INT REFERENCES optiondivertisement
 );
 
 CREATE TABLE annonce_optionsecurite (
     id SERIAL PRIMARY KEY ,
-    idannonce INT REFERENCES voiture,
+    idannonce INT REFERENCES annonce,
     idoptionsecutite INT REFERENCES optionsecurite
 );
 

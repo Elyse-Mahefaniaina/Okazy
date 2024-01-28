@@ -38,14 +38,14 @@ public class Annonce {
     @ManyToOne(optional = false)
     @JoinColumn(name = "idsystemefreinage", referencedColumnName = "id")
     private SystemFreinage systemeFreinage;
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "annonce_optiondivertissement",
             joinColumns = @JoinColumn(name = "idannonce") ,
             inverseJoinColumns = @JoinColumn(name = "idoptiondivertissement")
     )
     private Set<OptionDivertissement> optionDivertisements = new HashSet<>();
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "annonce_optionsecurite",
             joinColumns = @JoinColumn(name = "idannonce") ,
@@ -58,7 +58,7 @@ public class Annonce {
     private String couleurExterieur;
     private Double prix;
     private int state;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "idannonce")
     private Set<AnnoncePhoto> photos = new HashSet<>();
 

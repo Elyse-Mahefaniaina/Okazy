@@ -45,8 +45,12 @@ public class AnnonceController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<Annonce> annonces = this.annonceService.findAll();
-        return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        try {
+            List<Annonce> annonces = this.annonceService.findAll();
+            return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An error has occured",e.getMessage(), ""), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")
@@ -149,8 +153,12 @@ public class AnnonceController {
 
     @PostMapping()
     public ResponseEntity<Result> save(@RequestBody Annonce annonce) {
-        Annonce createdAnnonce = annonceService.save(annonce);
-        return new ResponseEntity<>(new Result("Created", "", createdAnnonce), HttpStatus.CREATED);
+        try {
+            Annonce createdAnnonce = annonceService.save(annonce);
+            return new ResponseEntity<>(new Result("Created", "", createdAnnonce), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An error occured", e.getMessage(), ""), HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{id}")
