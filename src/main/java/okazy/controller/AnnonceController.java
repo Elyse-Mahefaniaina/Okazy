@@ -1,9 +1,11 @@
 package okazy.controller;
 
 import okazy.model.Annonce;
+import okazy.model.Favoris;
 import okazy.model.user.Utilisateur;
 import okazy.result.Result;
 import okazy.service.AnnonceService;
+import okazy.service.FavorisService;
 import okazy.service.user.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,13 @@ import java.util.Optional;
 public class AnnonceController {
 
     private final AnnonceService annonceService;
+    private final FavorisService favorisService;
     private final UtilisateurService utilisateurService;
 
     @Autowired
-    public AnnonceController(AnnonceService annonceService, UtilisateurService utilisateurService) {
+    public AnnonceController(AnnonceService annonceService, FavorisService favorisService, UtilisateurService utilisateurService) {
         this.annonceService = annonceService;
+        this.favorisService = favorisService;
         this.utilisateurService = utilisateurService;
     }
 
@@ -41,6 +45,32 @@ public class AnnonceController {
         Optional<Annonce> annonce = this.annonceService.findById(id);
         return annonce.map( values -> new ResponseEntity<>(new Result("OK", "", annonce), HttpStatus.FOUND))
                 .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.BAD_REQUEST));
+    }
+
+    @PutMapping("/{id}/addFavorite")
+    public ResponseEntity<Result> ajoutFavorite(@PathVariable int id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Utilisateur> utilisateur = this.utilisateurService.findByUserName(userDetails.getUsername());
+
+        if (utilisateur.isPresent()) {
+            Utilisateur user = utilisateur.get();
+
+            Favoris favoris = new Favoris();
+            favoris.setIdannonce(id);
+            favoris.setIdutilisateur(user.getId());
+
+            this.favorisService.save(favoris);
+
+            return new ResponseEntity<>(new Result("Added to favorite","", ""), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new Result("NOT FOUND", "Authenticated user not found", ""), HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/{id}/removeFavorite")
+    public ResponseEntity<Result> deketeFavorite(@PathVariable int id) {
+        this.favorisService.deleteByIdannonce(id);
+
+        return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.OK);
     }
 
     @GetMapping("/valides")
@@ -69,6 +99,19 @@ public class AnnonceController {
         if (utilisateur.isPresent()) {
             Utilisateur user = utilisateur.get();
             List<Annonce> annonces = this.annonceService.findAllByUser(user.getId());
+            return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new Result("NOT FOUND", "Authenticated user not found", ""), HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/utilisateur/favoris")
+    public ResponseEntity<Result> findAllFavoriteByUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Utilisateur> utilisateur = this.utilisateurService.findByUserName(userDetails.getUsername());
+
+        if (utilisateur.isPresent()) {
+            Utilisateur user = utilisateur.get();
+            List<Annonce> annonces = this.annonceService.findAllFavoriteByUser(user.getId());
             return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
         }
         return new ResponseEntity<>(new Result("NOT FOUND", "Authenticated user not found", ""), HttpStatus.NOT_FOUND);

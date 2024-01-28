@@ -109,3 +109,9 @@ CREATE TABLE annonce_optionsecurite (
     idannonce INT REFERENCES voiture,
     idoptionsecutite INT REFERENCES optionsecurite
 );
+
+CREATE TABLE favoris(
+    id SERIAL PRIMARY KEY ,
+    idutilisateur INT REFERENCES utilisateur ,
+    idannonce INT REFERENCES annonce
+);

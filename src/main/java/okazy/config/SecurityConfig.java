@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> {
                     req
                         .requestMatchers("/authentication/**").permitAll()
+                        .requestMatchers("/annonces/valides").permitAll()
                         .anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());

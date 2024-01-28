@@ -16,4 +16,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
     @Query(value = "SELECT * FROM annonce WHERE idutilisateur = ?1", nativeQuery = true)
     List<Annonce> findByIdutilisateur(int idutilisateur);
 
+    @Query(value = "SELECT * FROM annonce WHERE id IN (SELECT idannonce FROM favoris WHERE idutilisateur ?1 )", nativeQuery = true)
+    List<Annonce> findAllFavorisUtilisateur(int idutilisateur);
 }

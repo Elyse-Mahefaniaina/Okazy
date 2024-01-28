@@ -20,6 +20,10 @@ public class AnnonceService {
         this.annonceRepository = annonceRepository;
     }
 
+    public List<Annonce> findAllFavoriteByUser(int id) {
+        return this.annonceRepository.findAllFavorisUtilisateur(id);
+    }
+
     public List<Annonce> findAll() {
         return this.annonceRepository.findAll();
     }
