@@ -26,7 +26,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
             "WHERE " +
             "(:motCle IS NULL OR a.titre LIKE CONCAT('%', :motCle, '%') OR a.description LIKE CONCAT('%', :motCle, '%')) " +
             "AND (:dateMin IS NULL OR a.date >= :dateMin) " +
-            "AND (:prixMin IS NULL OR a.prix >= :prixMin) " +
+            "AND (:prixMin IS NULL OR a.prix >= :prixMin ) " +
             "AND (:marque IS NULL OR m.nom = :marque) " +
             "AND (:modele IS NULL OR mo.nom = :modele)")
     List<Annonce> rechercheAvancee(
