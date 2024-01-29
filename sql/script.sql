@@ -115,3 +115,20 @@ CREATE TABLE favoris(
     idutilisateur INT REFERENCES utilisateur ,
     idannonce INT REFERENCES annonce
 );
+
+CREATE TABLE commission(
+    id SERIAL PRIMARY KEY ,
+    commission DOUBLE PRECISION
+);
+
+CREATE VIEW v_benef_marque AS
+    SELECT
+        m.id idmarque,
+        EXTRACT(YEAR FROM a.date) as annee,
+        SUM(a.prix * commission.commission) benef
+    FROM annonce a
+        INNER JOIN voiture v ON v.id = a.idvoiture
+        INNER JOIN marque m ON v.idmarque = m.id
+        INNER JOIN commission ON a.state = 21
+    WHERE a.state = 21
+    GROUP BY m.id, EXTRACT(YEAR FROM a.date);
