@@ -138,3 +138,21 @@ CREATE VIEW v_benef_marque AS
         INNER JOIN commission ON a.state = 21
     WHERE a.state = 21
     GROUP BY m.id, EXTRACT(YEAR FROM a.date);
+
+CREATE VIEW v_vente_month AS
+    SELECT
+        EXTRACT(YEAR FROM a.date) AS annee,
+        EXTRACT(MONTH FROM a.date) AS mois,
+        SUM(a.prix * commission.commission) total
+    FROM annonce a
+        INNER JOIN vente v ON v.idannonce = a.id
+        INNER JOIN commission ON a.state = 21
+    WHERE a.state = 21
+    GROUP BY a.date;
+
+CREATE VIEW v_vente_avg_month AS
+    SELECT
+        vvm.mois,
+        AVG(vvm.total) AS moyenne
+    FROM v_vente_month vvm
+    GROUP BY vvm.mois;
