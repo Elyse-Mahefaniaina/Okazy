@@ -24,6 +24,7 @@ public class BenefService {
         List<Benef> benefs =  this.benefRepository.findAll();
         for (Benef b : benefs) {
             b.setMarque(this.marqueService.findById(b.getIdmarque()).get());
+            b.setPourcentage(100.0 * b.getBenef() / b.getTotal());
         }
 
         return benefs;

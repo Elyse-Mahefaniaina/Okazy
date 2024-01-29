@@ -139,6 +139,15 @@ CREATE VIEW v_benef_marque AS
     WHERE a.state = 21
     GROUP BY m.id, EXTRACT(YEAR FROM a.date);
 
+CREATE VIEW v_benef_marque_avg AS
+    SELECT
+        v.idmarque ,
+        v.annee ,
+        v.benef ,
+        COUNT(*) AS total
+    FROM v_benef_marque v
+    GROUP BY v.idmarque, v.annee, v.benef;
+
 CREATE VIEW v_vente_month AS
     SELECT
         EXTRACT(YEAR FROM a.date) AS annee,

@@ -7,14 +7,17 @@ import jakarta.persistence.Transient;
 import okazy.model.voiture.caracteristique.Marque;
 
 @Entity
-@Table( name = "v_benef_marque")
+@Table( name = "v_benef_marque_avg")
 public class Benef {
     @Id
     private int idmarque;
     private int annee;
     private double benef;
+    private double total;
     @Transient
     private Marque marque;
+    @Transient
+    public double pourcentage;
 
     public int getIdmarque() {
         return idmarque;
@@ -40,11 +43,27 @@ public class Benef {
         this.benef = benef;
     }
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     public Marque getMarque() {
         return marque;
     }
 
     public void setMarque(Marque marque) {
         this.marque = marque;
+    }
+
+    public double getPourcentage() {
+        return pourcentage;
+    }
+
+    public void setPourcentage(double pourcentage) {
+        this.pourcentage = pourcentage;
     }
 }
