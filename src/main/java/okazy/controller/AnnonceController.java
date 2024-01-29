@@ -123,6 +123,12 @@ public class AnnonceController {
         return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
     }
 
+    @GetMapping("/nonvalides/count")
+    public ResponseEntity<Result> findAllNonValideCount() {
+        List<Annonce> annonces = this.annonceService.findAllNonValide();
+        return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+    }
+
     @GetMapping("/utilisateur")
     public ResponseEntity<Result> findAllByUser() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
