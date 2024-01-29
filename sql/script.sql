@@ -92,6 +92,12 @@ CREATE TABLE annonce(
     state INT
 );
 
+CREATE TABLE vente(
+    id SERIAL PRIMARY KEY ,
+    idannonce INT REFERENCES annonce ,
+    date date
+);
+
 CREATE TABLE voiture_annonce_photo (
     id SERIAL PRIMARY KEY ,
     idannonce INT REFERENCES annonce ,

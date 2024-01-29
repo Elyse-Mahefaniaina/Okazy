@@ -23,7 +23,7 @@ public class JWTManager {
     public String generateToken(Utilisateur utilisateur) {
         Date currentDate = new Date();
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(utilisateur.getUsername())
                 .setIssuedAt(currentDate)
                 .setExpiration(new Date(currentDate.getTime() + dayToMs(1)))
@@ -32,8 +32,6 @@ public class JWTManager {
                 .claim("role", utilisateur.getRole().getNom())
                 .signWith(key)
                 .compact();
-
-        return token;
     }
 
     public String getUsername(String token) {

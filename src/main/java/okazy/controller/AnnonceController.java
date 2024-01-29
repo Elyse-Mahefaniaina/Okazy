@@ -2,10 +2,12 @@ package okazy.controller;
 
 import okazy.model.Annonce;
 import okazy.model.Favoris;
+import okazy.model.Vente;
 import okazy.model.user.Utilisateur;
 import okazy.result.Result;
 import okazy.service.AnnonceService;
 import okazy.service.FavorisService;
+import okazy.service.VenteService;
 import okazy.service.user.UtilisateurService;
 import okazy.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +30,14 @@ public class AnnonceController {
     private final AnnonceService annonceService;
     private final FavorisService favorisService;
     private final UtilisateurService utilisateurService;
+    private final VenteService venteService;
 
     @Autowired
-    public AnnonceController(AnnonceService annonceService, FavorisService favorisService, UtilisateurService utilisateurService) {
+    public AnnonceController(AnnonceService annonceService, FavorisService favorisService, UtilisateurService utilisateurService, VenteService venteService) {
         this.annonceService = annonceService;
         this.favorisService = favorisService;
         this.utilisateurService = utilisateurService;
+        this.venteService = venteService;
     }
 
     @GetMapping
@@ -155,9 +161,16 @@ public class AnnonceController {
     }
 
     @PutMapping("/vendre/{id}")
+    @Transactional
     public ResponseEntity<Result> vendre(@PathVariable int id){
         try {
             Annonce annonce = this.annonceService.vendre(id);
+
+            Vente vente = new Vente();
+            vente.setIdannonce(annonce.getId());
+            vente.setDate(new Date(new java.util.Date().getTime()));
+            this.venteService.save(vente);
+
             return new ResponseEntity<>(new Result("OK","", annonce), HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(new Result("Modification Failure", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
