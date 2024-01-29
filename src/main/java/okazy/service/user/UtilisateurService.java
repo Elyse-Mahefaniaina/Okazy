@@ -32,4 +32,8 @@ public class UtilisateurService {
         return jwt.generateToken(utilisateur);
     }
 
+    public Utilisateur save(Utilisateur utilisateur) {
+        return this.utilisateurRepository.save(utilisateur);
+    }
+
 }

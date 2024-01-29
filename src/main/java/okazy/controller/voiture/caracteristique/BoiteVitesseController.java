@@ -31,36 +31,56 @@ public class BoiteVitesseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<BoiteVitesse> boiteVitesse = boiteVitesseService.findById(id);
-        return boiteVitesse.map( value -> new ResponseEntity<>(new Result("OK", "", boiteVitesse), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try{
+            Optional<BoiteVitesse> boiteVitesse = boiteVitesseService.findById(id);
+            return boiteVitesse.map( value -> new ResponseEntity<>(new Result("OK", "", boiteVitesse), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody BoiteVitesse boiteVitesse) {
-        BoiteVitesse bv = boiteVitesseService.save(boiteVitesse);
-        return new ResponseEntity<>(new Result("CREATED", "", bv), HttpStatus.CREATED);
+        try{
+            BoiteVitesse bv = boiteVitesseService.save(boiteVitesse);
+            return new ResponseEntity<>(new Result("CREATED", "", bv), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody BoiteVitesse boiteVitesse) {
-        BoiteVitesse bv = boiteVitesseService.update(id, boiteVitesse);
-        return new ResponseEntity<>(new Result("UPDATED", "", bv), HttpStatus.OK);
+        try {
+            BoiteVitesse bv = boiteVitesseService.update(id, boiteVitesse);
+            return new ResponseEntity<>(new Result("UPDATED", "", bv), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<BoiteVitesse> boiteVitesse = boiteVitesseService.findById(id);
+        try{
+            Optional<BoiteVitesse> boiteVitesse = boiteVitesseService.findById(id);
 
-        if (boiteVitesse.isPresent()) {
-            boiteVitesseService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (boiteVitesse.isPresent()) {
+                boiteVitesseService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
         }
 
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
-    }
 
 }

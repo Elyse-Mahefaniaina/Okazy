@@ -146,7 +146,8 @@ CREATE VIEW v_benef_marque_avg AS
         v.benef ,
         COUNT(*) AS total
     FROM v_benef_marque v
-    GROUP BY v.idmarque, v.annee, v.benef;
+    GROUP BY v.idmarque, v.annee, v.benef
+    ORDER BY v.annee DESC;
 
 CREATE VIEW v_vente_month AS
     SELECT

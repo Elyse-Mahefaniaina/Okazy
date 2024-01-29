@@ -7,6 +7,7 @@ import okazy.service.stat.VenteAVGService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +26,13 @@ public class VenteAVGController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> findAll() {
-        List<VenteAVG> venteAVGS = this.venteAVGService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", venteAVGS), HttpStatus.OK);
+        try {
+            List<VenteAVG> venteAVGS = this.venteAVGService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", venteAVGS), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 }

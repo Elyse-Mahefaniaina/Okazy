@@ -39,15 +39,25 @@ public class CassisController {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody Cassis cassis) {
-        Cassis c = cassisService.save(cassis);
-        return new ResponseEntity<>(new Result("CREATED", "", c), HttpStatus.CREATED);
+        try{
+            Cassis c = cassisService.save(cassis);
+            return new ResponseEntity<>(new Result("CREATED", "", c), HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody Cassis cassis) {
-        Cassis c = cassisService.update(id, cassis);
-        return new ResponseEntity<>(new Result("UPDATED", "", c), HttpStatus.OK);
+        try{
+            Cassis c = cassisService.update(id, cassis);
+            return new ResponseEntity<>(new Result("UPDATED", "", c), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @DeleteMapping("/{id}")
