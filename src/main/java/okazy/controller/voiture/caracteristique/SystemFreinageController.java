@@ -25,42 +25,62 @@ public class SystemFreinageController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<SystemFreinage> systemeFreinages = systemFreinageService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", systemeFreinages), HttpStatus.OK);
+        try {
+            List<SystemFreinage> systemeFreinages = systemFreinageService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", systemeFreinages), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<SystemFreinage> systemeFreinage = systemFreinageService.findById(id);
-        return systemeFreinage.map( value -> new ResponseEntity<>(new Result("OK", "", systemeFreinage), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<SystemFreinage> systemeFreinage = systemFreinageService.findById(id);
+            return systemeFreinage.map( value -> new ResponseEntity<>(new Result("OK", "", systemeFreinage), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody SystemFreinage systemeFreinage) {
-        SystemFreinage m = systemFreinageService.save(systemeFreinage);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            SystemFreinage m = systemFreinageService.save(systemeFreinage);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody SystemFreinage systemeFreinage) {
-        SystemFreinage m = systemFreinageService.update(id, systemeFreinage);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            SystemFreinage m = systemFreinageService.update(id, systemeFreinage);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<SystemFreinage> systemeFreinage = systemFreinageService.findById(id);
+        try {
+            Optional<SystemFreinage> systemeFreinage = systemFreinageService.findById(id);
 
-        if (systemeFreinage.isPresent()) {
-            systemFreinageService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (systemeFreinage.isPresent()) {
+                systemFreinageService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

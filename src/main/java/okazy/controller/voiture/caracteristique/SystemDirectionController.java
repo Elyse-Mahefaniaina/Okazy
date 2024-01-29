@@ -25,42 +25,62 @@ public class SystemDirectionController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<SystemDirection> systemDirections = systemDirectionService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", systemDirections), HttpStatus.OK);
+        try {
+            List<SystemDirection> systemDirections = systemDirectionService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", systemDirections), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<SystemDirection> systemDirection = systemDirectionService.findById(id);
-        return systemDirection.map( value -> new ResponseEntity<>(new Result("OK", "", systemDirection), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<SystemDirection> systemDirection = systemDirectionService.findById(id);
+            return systemDirection.map( value -> new ResponseEntity<>(new Result("OK", "", systemDirection), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody SystemDirection systemDirection) {
-        SystemDirection m = systemDirectionService.save(systemDirection);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            SystemDirection m = systemDirectionService.save(systemDirection);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody SystemDirection systemDirection) {
-        SystemDirection m = systemDirectionService.update(id, systemDirection);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            SystemDirection m = systemDirectionService.update(id, systemDirection);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<SystemDirection> systemDirection = systemDirectionService.findById(id);
+        try {
+            Optional<SystemDirection> systemDirection = systemDirectionService.findById(id);
 
-        if (systemDirection.isPresent()) {
-            systemDirectionService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (systemDirection.isPresent()) {
+                systemDirectionService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

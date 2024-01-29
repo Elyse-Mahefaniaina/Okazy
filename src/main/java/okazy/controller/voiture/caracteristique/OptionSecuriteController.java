@@ -25,42 +25,64 @@ public class OptionSecuriteController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<OptionSecurite> optionSecurites = optionSecuriteService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", optionSecurites), HttpStatus.OK);
+        try {
+            List<OptionSecurite> optionSecurites = optionSecuriteService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", optionSecurites), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<OptionSecurite> optionSecurite = optionSecuriteService.findById(id);
-        return optionSecurite.map( value -> new ResponseEntity<>(new Result("OK", "", optionSecurite), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<OptionSecurite> optionSecurite = optionSecuriteService.findById(id);
+            return optionSecurite.map( value -> new ResponseEntity<>(new Result("OK", "", optionSecurite), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody OptionSecurite optionSecurite) {
-        OptionSecurite m = optionSecuriteService.save(optionSecurite);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            OptionSecurite m = optionSecuriteService.save(optionSecurite);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody OptionSecurite optionSecurite) {
-        OptionSecurite m = optionSecuriteService.update(id, optionSecurite);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            OptionSecurite m = optionSecuriteService.update(id, optionSecurite);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<OptionSecurite> model = optionSecuriteService.findById(id);
 
-        if (model.isPresent()) {
-            optionSecuriteService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+        try {
+            Optional<OptionSecurite> model = optionSecuriteService.findById(id);
+
+            if (model.isPresent()) {
+                optionSecuriteService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

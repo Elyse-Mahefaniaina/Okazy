@@ -25,42 +25,62 @@ public class SuspensionController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<Suspension> suspensions = suspensionService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", suspensions), HttpStatus.OK);
+        try {
+            List<Suspension> suspensions = suspensionService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", suspensions), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<Suspension> suspension = suspensionService.findById(id);
-        return suspension.map( value -> new ResponseEntity<>(new Result("OK", "", suspension), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<Suspension> suspension = suspensionService.findById(id);
+            return suspension.map( value -> new ResponseEntity<>(new Result("OK", "", suspension), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody Suspension suspension) {
-        Suspension m = suspensionService.save(suspension);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            Suspension m = suspensionService.save(suspension);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody Suspension suspension) {
-        Suspension m = suspensionService.update(id, suspension);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            Suspension m = suspensionService.update(id, suspension);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<Suspension> suspension = suspensionService.findById(id);
+        try {
+            Optional<Suspension> suspension = suspensionService.findById(id);
 
-        if (suspension.isPresent()) {
-            suspensionService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (suspension.isPresent()) {
+                suspensionService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

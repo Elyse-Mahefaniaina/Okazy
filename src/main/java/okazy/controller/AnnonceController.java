@@ -3,6 +3,7 @@ package okazy.controller;
 import okazy.model.Annonce;
 import okazy.model.Favoris;
 import okazy.model.Vente;
+import okazy.model.stat.VenteAVG;
 import okazy.model.user.Utilisateur;
 import okazy.result.Result;
 import okazy.service.AnnonceService;
@@ -106,33 +107,52 @@ public class AnnonceController {
 
     @PutMapping("/{id}/removeFavorite")
     public ResponseEntity<Result> deketeFavorite(@PathVariable int id) {
-        this.favorisService.deleteByIdannonce(id);
-
-        return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.OK);
+        try {
+            this.favorisService.deleteByIdannonce(id);
+            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/valides")
     public ResponseEntity<Result> findAllValide() {
-        List<Annonce> annonces = this.annonceService.findAllValide();
-        return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        try {
+            List<Annonce> annonces = this.annonceService.findAllValide();
+            return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/valides/count")
     public ResponseEntity<Result> findAllValideCount() {
-        List<Annonce> annonces = this.annonceService.findAllValide();
-        return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+        try {
+            List<Annonce> annonces = this.annonceService.findAllValide();
+            return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/nonvalides")
     public ResponseEntity<Result> findAllNonValide() {
-        List<Annonce> annonces = this.annonceService.findAllNonValide();
-        return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        try {
+            List<Annonce> annonces = this.annonceService.findAllNonValide();
+            return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/nonvalides/count")
     public ResponseEntity<Result> findAllNonValideCount() {
-        List<Annonce> annonces = this.annonceService.findAllNonValide();
-        return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+        try {
+            List<Annonce> annonces = this.annonceService.findAllNonValide();
+            return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/utilisateur")
@@ -201,25 +221,33 @@ public class AnnonceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Result> updateVoiture(@PathVariable int id, @RequestBody Annonce annonce) {
-        Optional<Annonce> existingAnnonce = annonceService.findById(id);
+        try {
+            Optional<Annonce> existingAnnonce = annonceService.findById(id);
 
-        if (existingAnnonce.isPresent()) {
-            Annonce updateAnnonce = annonceService.update(id, annonce);
-            return new ResponseEntity<>(new Result("Updated", "", updateAnnonce), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+            if (existingAnnonce.isPresent()) {
+                Annonce updateAnnonce = annonceService.update(id, annonce);
+                return new ResponseEntity<>(new Result("Updated", "", updateAnnonce), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> deleteAnnonce(@PathVariable int id) {
-        Optional<Annonce> existingAnnonce = annonceService.findById(id);
-        if (existingAnnonce.isPresent()) {
-            annonceService.delete(id);
-            return new ResponseEntity<>(new Result("Deleted", "", ""), HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+        try {
+            Optional<Annonce> existingAnnonce = annonceService.findById(id);
+            if (existingAnnonce.isPresent()) {
+                annonceService.delete(id);
+                return new ResponseEntity<>(new Result("Deleted", "", ""), HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
     }
 }

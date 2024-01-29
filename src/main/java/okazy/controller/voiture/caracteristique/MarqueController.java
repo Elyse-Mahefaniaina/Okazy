@@ -25,42 +25,63 @@ public class MarqueController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<Marque> casses = marqueService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", casses), HttpStatus.OK);
+        try {
+            List<Marque> casses = marqueService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", casses), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<Marque> marque = marqueService.findById(id);
-        return marque.map( value -> new ResponseEntity<>(new Result("OK", "", marque), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<Marque> marque = marqueService.findById(id);
+            return marque.map( value -> new ResponseEntity<>(new Result("OK", "", marque), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody Marque marque) {
-        Marque c = marqueService.save(marque);
-        return new ResponseEntity<>(new Result("CREATED", "", c), HttpStatus.CREATED);
+        try {
+            Marque c = marqueService.save(marque);
+            return new ResponseEntity<>(new Result("CREATED", "", c), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody Marque marque) {
-        Marque m = marqueService.update(id, marque);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            Marque m = marqueService.update(id, marque);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<Marque> marque = marqueService.findById(id);
+        try {
+            Optional<Marque> marque = marqueService.findById(id);
+            if (marque.isPresent()) {
+                marqueService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
 
-        if (marque.isPresent()) {
-            marqueService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

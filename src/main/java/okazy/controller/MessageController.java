@@ -43,7 +43,11 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Result> save(@RequestBody Message message) {
-        Message m = this.messageRepository.save(message);
-        return new ResponseEntity<>(new Result("SAVED", "", m), HttpStatus.OK);
+        try {
+            Message m = this.messageRepository.save(message);
+            return new ResponseEntity<>(new Result("SAVED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 }

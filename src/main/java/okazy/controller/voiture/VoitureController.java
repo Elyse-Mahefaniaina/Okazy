@@ -26,8 +26,12 @@ public class VoitureController {
 
     @GetMapping
     public ResponseEntity<Result> getAllVoitures() {
-        List<Voiture> voitures = voitureService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", voitures), HttpStatus.OK);
+        try {
+            List<Voiture> voitures = voitureService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", voitures), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/advenced")
@@ -50,39 +54,55 @@ public class VoitureController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> getVoitureById(@PathVariable int id) {
-        Optional<Voiture> voiture = voitureService.findById(id);
-        return voiture.map(value -> new ResponseEntity<>(new Result("OK", "", voiture), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<Voiture> voiture = voitureService.findById(id);
+            return voiture.map(value -> new ResponseEntity<>(new Result("OK", "", voiture), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> createVoiture(@RequestBody Voiture voiture) {
-        Voiture createdVoiture = voitureService.insert(voiture);
-        return new ResponseEntity<>(new Result("Created", "", createdVoiture), HttpStatus.CREATED);
+        try {
+            Voiture createdVoiture = voitureService.insert(voiture);
+            return new ResponseEntity<>(new Result("Created", "", createdVoiture), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> updateVoiture(@PathVariable int id, @RequestBody Voiture voiture) {
-        Optional<Voiture> existingVoiture = voitureService.findById(id);
-        if (existingVoiture.isPresent()) {
-            Voiture updatedVoiture = voitureService.update(id, voiture);
-            return new ResponseEntity<>(new Result("Updated", "", updatedVoiture), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+        try {
+            Optional<Voiture> existingVoiture = voitureService.findById(id);
+            if (existingVoiture.isPresent()) {
+                Voiture updatedVoiture = voitureService.update(id, voiture);
+                return new ResponseEntity<>(new Result("Updated", "", updatedVoiture), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> deleteVoiture(@PathVariable int id) {
-        Optional<Voiture> existingVoiture = voitureService.findById(id);
-        if (existingVoiture.isPresent()) {
-            voitureService.delete(id);
-            return new ResponseEntity<>(new Result("Deleted", "", ""), HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+        try {
+            Optional<Voiture> existingVoiture = voitureService.findById(id);
+            if (existingVoiture.isPresent()) {
+                voitureService.delete(id);
+                return new ResponseEntity<>(new Result("Deleted", "", ""), HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(new Result("Not Found", "", ""), HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
     }
 }

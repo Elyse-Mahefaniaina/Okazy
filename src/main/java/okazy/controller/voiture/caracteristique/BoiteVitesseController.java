@@ -1,5 +1,6 @@
 package okazy.controller.voiture.caracteristique;
 
+import okazy.model.Vente;
 import okazy.model.voiture.caracteristique.BoiteVitesse;
 import okazy.result.Result;
 import okazy.service.voiture.caracteristique.BoiteVitesseService;
@@ -25,8 +26,12 @@ public class BoiteVitesseController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<BoiteVitesse> boiteVitesses = boiteVitesseService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", boiteVitesses), HttpStatus.OK);
+        try {
+            List<BoiteVitesse> boiteVitesses = boiteVitesseService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", boiteVitesses), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
@@ -80,7 +85,6 @@ public class BoiteVitesseController {
         }catch (Exception e){
             return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-        }
-
+    }
 
 }

@@ -2,7 +2,6 @@ package okazy.controller.stat;
 
 import okazy.model.stat.VenteAVG;
 import okazy.result.Result;
-import okazy.service.VenteService;
 import okazy.service.stat.VenteAVGService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

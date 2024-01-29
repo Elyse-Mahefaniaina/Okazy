@@ -25,42 +25,62 @@ public class OptionDivertissementController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<OptionDivertissement> optionDivertissements = optionDivertissementService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", optionDivertissements), HttpStatus.OK);
+        try {
+            List<OptionDivertissement> optionDivertissements = optionDivertissementService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", optionDivertissements), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<OptionDivertissement> optionDivertissement = optionDivertissementService.findById(id);
-        return optionDivertissement.map( value -> new ResponseEntity<>(new Result("OK", "", optionDivertissement), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<OptionDivertissement> optionDivertissement = optionDivertissementService.findById(id);
+            return optionDivertissement.map( value -> new ResponseEntity<>(new Result("OK", "", optionDivertissement), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody OptionDivertissement optionDivertissement) {
-        OptionDivertissement m = optionDivertissementService.save(optionDivertissement);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            OptionDivertissement m = optionDivertissementService.save(optionDivertissement);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody OptionDivertissement optionDivertissement) {
-        OptionDivertissement m = optionDivertissementService.update(id, optionDivertissement);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            OptionDivertissement m = optionDivertissementService.update(id, optionDivertissement);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<OptionDivertissement> model = optionDivertissementService.findById(id);
+        try {
+            Optional<OptionDivertissement> model = optionDivertissementService.findById(id);
 
-        if (model.isPresent()) {
-            optionDivertissementService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (model.isPresent()) {
+                optionDivertissementService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

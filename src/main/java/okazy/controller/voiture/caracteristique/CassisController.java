@@ -25,15 +25,24 @@ public class CassisController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<Cassis> casses = cassisService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", casses), HttpStatus.OK);
+        try {
+            List<Cassis> casses = cassisService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", casses), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<Cassis> cassis = cassisService.findById(id);
-        return cassis.map( value -> new ResponseEntity<>(new Result("OK", "", cassis), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<Cassis> cassis = cassisService.findById(id);
+            return cassis.map( value -> new ResponseEntity<>(new Result("OK", "", cassis), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
@@ -63,14 +72,16 @@ public class CassisController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<Cassis> cassis = cassisService.findById(id);
-
-        if (cassis.isPresent()) {
-            cassisService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+        try {
+            Optional<Cassis> cassis = cassisService.findById(id);
+            if (cassis.isPresent()) {
+                cassisService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }

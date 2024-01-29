@@ -25,8 +25,11 @@ public class VenteController {
 
     @GetMapping("/count")
     public ResponseEntity<Result> Count() {
-        List<Vente> ventes = this.venteService.findAll();
-
-        return new ResponseEntity<>(new Result("OK", "", ventes.size()), HttpStatus.OK);
+        try {
+            List<Vente> ventes = this.venteService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", ventes.size()), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 }

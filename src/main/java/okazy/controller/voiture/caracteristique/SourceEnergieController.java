@@ -25,42 +25,62 @@ public class SourceEnergieController {
 
     @GetMapping
     public ResponseEntity<Result> findAll() {
-        List<SourceEnergie> sourceEnergies = sourceEnergieService.findAll();
-        return new ResponseEntity<>(new Result("OK", "", sourceEnergies), HttpStatus.OK);
+        try {
+            List<SourceEnergie> sourceEnergies = sourceEnergieService.findAll();
+            return new ResponseEntity<>(new Result("OK", "", sourceEnergies), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> findById(@PathVariable int id) {
-        Optional<SourceEnergie> sourceEnergie = sourceEnergieService.findById(id);
-        return sourceEnergie.map( value -> new ResponseEntity<>(new Result("OK", "", sourceEnergie), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        try {
+            Optional<SourceEnergie> sourceEnergie = sourceEnergieService.findById(id);
+            return sourceEnergie.map( value -> new ResponseEntity<>(new Result("OK", "", sourceEnergie), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND));
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@RequestBody SourceEnergie sourceEnergie) {
-        SourceEnergie m = sourceEnergieService.save(sourceEnergie);
-        return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        try {
+            SourceEnergie m = sourceEnergieService.save(sourceEnergie);
+            return new ResponseEntity<>(new Result("CREATED", "", m), HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> save(@PathVariable int id, @RequestBody SourceEnergie sourceEnergie) {
-        SourceEnergie m = sourceEnergieService.update(id, sourceEnergie);
-        return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        try {
+            SourceEnergie m = sourceEnergieService.update(id, sourceEnergie);
+            return new ResponseEntity<>(new Result("UPDATED", "", m), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> delete(@PathVariable int id) {
-        Optional<SourceEnergie> sourceEnergie = sourceEnergieService.findById(id);
+        try {
+            Optional<SourceEnergie> sourceEnergie = sourceEnergieService.findById(id);
 
-        if (sourceEnergie.isPresent()) {
-            sourceEnergieService.delete(id);
-            return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            if (sourceEnergie.isPresent()) {
+                sourceEnergieService.delete(id);
+                return new ResponseEntity<>(new Result("DELETED", "", ""), HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An Error Occured", e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(new Result("NOT FOUND", "", ""), HttpStatus.NOT_FOUND);
     }
 
 }
