@@ -12,36 +12,70 @@ import java.util.List;
 @Repository
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
 
-    @Query("SELECT DISTINCT a FROM Annonce a " +
-            "JOIN FETCH a.voiture v " +
-            "JOIN FETCH v.marque m " +
-            "JOIN FETCH v.model mo " +
-            "JOIN FETCH a.systemDirection sd " +
-            "JOIN FETCH a.systemeFreinage sf " +
-            "JOIN FETCH a.boiteVitesse bv " +
-            "JOIN FETCH a.sourceEnergie se " +
-            "JOIN FETCH a.suspension su " +
-            "LEFT JOIN FETCH a.optionDivertisements od " +
-            "LEFT JOIN FETCH a.optionSecurites os " +
-            "WHERE " +
-            "(:motCle IS NULL OR a.titre LIKE CONCAT('%', :motCle, '%') OR a.description LIKE CONCAT('%', :motCle, '%')) " +
-            "AND (:dateMin IS NULL OR a.date >= :dateMin) " +
-            "AND (:prixMin IS NULL OR a.prix >= :prixMin ) " +
-            "AND (:marque IS NULL OR m.nom = :marque) " +
-            "AND (:modele IS NULL OR mo.nom = :modele)")
-    List<Annonce> rechercheAvancee(
-                            @Param("motCle") String motCle,
-                            @Param("dateMin") Date dateMin,
-                            @Param("prixMin") Double prixMin,
-                            @Param("marque") String marque,
-                            @Param("modele") String modele);
+    @Query(value = """
+        SELECT
+            a
+        FROM Annonce a
+            LEFT JOIN a.optionDivertisements od
+            LEFT JOIN a.optionSecurites os
+        WHERE
+            (:prixmin IS NULL OR a.prix <= :prixmin) AND
+            (:prixmax IS NULL OR a.prix >= :prixmax) AND
+            (:boiteVitesse IS NULL OR a.boiteVitesse.nom = :boiteVitesse) AND
+            (:sourceEnergie IS NULL OR a.sourceEnergie.nom = :sourceEnergie) AND
+            (:suspension IS NULL OR a.suspension.nom = :suspension) AND
+            (:systemDirection IS NULL OR a.systemDirection.nom = :systemDirection) AND
+            (:systemeFreinage IS NULL OR a.systemeFreinage.nom = :systemeFreinage) AND
+            (:optionDivertisements IS NULL OR od.nom = :optionDivertisements) AND
+            (:optionSecurites IS NULL OR os.nom = :optionSecurites) AND
+            (:marque IS NULL OR a.voiture.marque.nom = :marque) AND
+            (:model IS NULL OR a.voiture.model.nom = :model) AND
+            (:puissancefiscale IS NULL OR a.voiture.puissancefiscale = :puissancefiscale) AND
+            (:cylindre IS NULL OR a.voiture.cylindre = :cylindre) AND
+            (:puissancemoteur IS NULL OR a.voiture.puissancemoteur = :puissancemoteur) AND
+            (:cassis IS NULL OR a.voiture.cassis.nom = :cassis) AND
+            (:nombreporte IS NULL OR a.voiture.nombreporte = :nombreporte) AND
+            (:nombreplace IS NULL OR a.voiture.nombreplace = :nombreplace) AND
+            (CAST(:miseencirculation AS CHARACTER ) IS NULL OR a.voiture.miseencirculation = :miseencirculation) AND
+            (CAST(:date AS CHARACTER ) IS NULL OR a.date = :date) AND
+            (a.state = 11)
+    """)
+    List<Annonce> findAdvenced(
+            @Param("prixmin") Double prixmin,
+            @Param("prixmax") Double prixmax,
+            @Param("boiteVitesse") String boiteVitesse,
+            @Param("sourceEnergie") String sourceEnergie,
+            @Param("suspension") String suspension,
+            @Param("systemDirection") String systemDirection,
+            @Param("systemeFreinage") String systemeFreinage,
+            @Param("optionDivertisements") String optionDivertisements,
+            @Param("optionSecurites") String optionSecurites,
+            @Param("marque") String marque,
+            @Param("model") String model,
+            @Param("puissancefiscale") Double puissancefiscale,
+            @Param("cylindre") Double cylindre,
+            @Param("puissancemoteur") Double puissancemoteur,
+            @Param("cassis") String cassis,
+            @Param("nombreporte") Integer nombreporte,
+            @Param("nombreplace") Integer nombreplace,
+            @Param("miseencirculation") Date miseencirculation,
+            @Param("date") Date date
+    );
 
-    @Query(value = "SELECT * FROM annonce WHERE state = ?1", nativeQuery = true)
+    @Query(value = "SELECT a FROM Annonce a WHERE a.state = ?1")
     List<Annonce> findByState(int state);
 
-    @Query(value = "SELECT * FROM annonce WHERE idutilisateur = ?1", nativeQuery = true)
+    @Query(value = "SELECT a FROM Annonce a WHERE a.utilisateur.id = ?1")
     List<Annonce> findByIdutilisateur(int idutilisateur);
 
-    @Query(value = "SELECT * FROM annonce WHERE id IN (SELECT idannonce FROM favoris WHERE idutilisateur ?1 )", nativeQuery = true)
+    @Query(value = """
+        SELECT
+            a
+        FROM Annonce a
+            INNER JOIN Favoris f ON f.idannonce = a.id
+        WHERE f.idutilisateur = ?1
+        
+    """
+    )
     List<Annonce> findAllFavorisUtilisateur(int idutilisateur);
 }

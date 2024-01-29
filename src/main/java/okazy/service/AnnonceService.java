@@ -20,12 +20,31 @@ public class AnnonceService {
         this.annonceRepository = annonceRepository;
     }
 
-    public List<Annonce> rechercheAvanceeAnnonces(String motCle, Date dateMin, Double prixMin, String marque, String modele) {
-        return annonceRepository.rechercheAvancee(motCle, dateMin, prixMin, marque, modele);
-    }
-
     public List<Annonce> findAllFavoriteByUser(int id) {
         return this.annonceRepository.findAllFavorisUtilisateur(id);
+    }
+
+    public List<Annonce> findAdvenced(
+                                        Double prixmin,
+                                        Double prixmax,
+                                        String boiteVitesse,
+                                        String sourceEnergie,
+                                        String suspension,
+                                        String systemDirection,
+                                        String systemeFreinage,
+                                        String optionDivertisements,
+                                        String optionSecurites,
+                                        String marque,
+                                        String model,
+                                        Double puissancefiscale,
+                                        Double cylindre,
+                                        Double puissancemoteur,
+                                        String cassis,
+                                        Integer nombreporte,
+                                        Integer nombreplace,
+                                        Date miseencirculation,
+                                        Date date ) {
+        return this.annonceRepository.findAdvenced(prixmin, prixmax, boiteVitesse, sourceEnergie, suspension, systemDirection, systemeFreinage, optionDivertisements, optionSecurites, marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, miseencirculation, date);
     }
 
     public List<Annonce> findAll() {

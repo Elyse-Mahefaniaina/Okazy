@@ -7,6 +7,7 @@ import okazy.result.Result;
 import okazy.service.AnnonceService;
 import okazy.service.FavorisService;
 import okazy.service.user.UtilisateurService;
+import okazy.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,19 +35,38 @@ public class AnnonceController {
         this.utilisateurService = utilisateurService;
     }
 
-    @GetMapping("/rechercheAvancee")
-    public List<Annonce> rechercheAvanceeAnnonces(@RequestParam(required = false) String motCle,
-                                                  @RequestParam(required = false) Date dateMin,
-                                                  @RequestParam(required = false) Double prixMin,
-                                                  @RequestParam(required = false) String marque,
-                                                  @RequestParam(required = false) String modele) {
-        return annonceService.rechercheAvanceeAnnonces(motCle, dateMin, prixMin, marque, modele);
-    }
-
     @GetMapping
     public ResponseEntity<Result> findAll() {
         try {
             List<Annonce> annonces = this.annonceService.findAll();
+            return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("An error has occured",e.getMessage(), ""), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/advenced")
+    public ResponseEntity<Result> findAllAdvenced(@RequestParam(required = false) Double prixmin,
+                                                  @RequestParam(required = false) Double prixmax,
+                                                  @RequestParam(required = false) String boiteVitesse,
+                                                  @RequestParam(required = false) String sourceEnergie,
+                                                  @RequestParam(required = false) String suspension,
+                                                  @RequestParam(required = false) String systemDirection,
+                                                  @RequestParam(required = false) String systemeFreinage,
+                                                  @RequestParam(required = false) String optionDivertisements,
+                                                  @RequestParam(required = false) String optionSecurites,
+                                                  @RequestParam(required = false) String marque,
+                                                  @RequestParam(required = false) String model,
+                                                  @RequestParam(required = false) Double puissancefiscale,
+                                                  @RequestParam(required = false) Double cylindre,
+                                                  @RequestParam(required = false) Double puissancemoteur,
+                                                  @RequestParam(required = false) String cassis,
+                                                  @RequestParam(required = false) Integer nombreporte,
+                                                  @RequestParam(required = false) Integer nombreplace,
+                                                  @RequestParam(required = false) String miseencirculation,
+                                                  @RequestParam(required = false) String date ) {
+        try {
+            List<Annonce> annonces = this.annonceService.findAdvenced(prixmin, prixmax, boiteVitesse, sourceEnergie, suspension, systemDirection, systemeFreinage, optionDivertisements, optionSecurites, marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, Util.parseToDate(miseencirculation), Util.parseToDate(date));
             return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(new Result("An error has occured",e.getMessage(), ""), HttpStatus.OK);

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FavorisRepository extends JpaRepository<okazy.model.Favoris, Integer> {
 
-    @Query(value = "DELETE FROM favoris WHERE idannonce = ?1", nativeQuery = true)
+    @Query(value = "DELETE FROM Favoris f WHERE f.idannonce = ?1")
     void deleteByIdannonce(int idannonce);
 }
