@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,24 @@ public class VoitureController {
     public ResponseEntity<Result> getAllVoitures() {
         List<Voiture> voitures = voitureService.findAll();
         return new ResponseEntity<>(new Result("OK", "", voitures), HttpStatus.OK);
+    }
+
+    @GetMapping("/advenced")
+    public ResponseEntity<Result> getAllVoituresAdvenced(@RequestParam(required = false) String marque,
+                                                         @RequestParam(required = false) String model,
+                                                         @RequestParam(required = false) Double puissancefiscale,
+                                                         @RequestParam(required = false) Double cylindre,
+                                                         @RequestParam(required = false) Double puissancemoteur,
+                                                         @RequestParam(required = false) String cassis,
+                                                         @RequestParam(required = false) Integer nombreporte,
+                                                         @RequestParam(required = false) Integer nombreplace,
+                                                         @RequestParam(required = false) Date miseencirculation) {
+        try {
+            List<Voiture> voitures = voitureService.findAdvenced(marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, miseencirculation);
+            return new ResponseEntity<>(new Result("OK", "", voitures), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new Result("Failed", e.getMessage(), ""), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")

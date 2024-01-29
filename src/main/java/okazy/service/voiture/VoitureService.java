@@ -5,6 +5,7 @@ import okazy.repository.voiture.VoitureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,18 @@ public class VoitureService {
     @Autowired
     public VoitureService(VoitureRepository voitureRepository) {
         this.voitureRepository = voitureRepository;
+    }
+
+    public List<Voiture> findAdvenced( String marque,
+                                    String model,
+                                    Double puissancefiscale,
+                                    Double cylindre,
+                                    Double puissancemoteur,
+                                    String cassis,
+                                    Integer nombreporte,
+                                    Integer nombreplace,
+                                    Date miseencirculation) {
+        return this.voitureRepository.rechercheParMotCle(marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, miseencirculation);
     }
 
     public List<Voiture> findAll() {
