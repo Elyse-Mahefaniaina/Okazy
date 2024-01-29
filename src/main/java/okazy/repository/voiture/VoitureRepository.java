@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,7 +25,7 @@ public interface VoitureRepository extends JpaRepository<Voiture, Integer> {
             (:cassis IS NULL OR v.cassis.nom = :cassis) AND
             (:nombreporte IS NULL OR v.nombreporte = :nombreporte) AND
             (:nombreplace IS NULL OR v.nombreplace = :nombreplace) AND
-            (CAST(:miseencirculation AS DATE ) IS NULL OR v.miseencirculation = CAST(:miseencirculation AS DATE ))
+            (CAST(:miseencirculation AS CHARACTER ) IS NULL OR v.miseencirculation=:miseencirculation)
              
     """)
     List<Voiture> rechercheParMotCle(
@@ -36,6 +37,6 @@ public interface VoitureRepository extends JpaRepository<Voiture, Integer> {
             @Param("cassis") String cassis,
             @Param("nombreporte") Integer nombreporte,
             @Param("nombreplace") Integer nombreplace,
-            @Param("miseencirculation") java.sql.Date miseencirculation
+            @Param("miseencirculation") Date miseencirculation
     );
 }

@@ -3,13 +3,14 @@ package okazy.controller.voiture;
 import okazy.model.voiture.Voiture;
 import okazy.result.Result;
 import okazy.service.voiture.VoitureService;
+import okazy.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +39,9 @@ public class VoitureController {
                                                          @RequestParam(required = false) String cassis,
                                                          @RequestParam(required = false) Integer nombreporte,
                                                          @RequestParam(required = false) Integer nombreplace,
-                                                         @RequestParam(required = false) Date miseencirculation) {
+                                                         @RequestParam(required = false) String miseencirculation) {
         try {
-            List<Voiture> voitures = voitureService.findAdvenced(marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, miseencirculation);
+            List<Voiture> voitures = voitureService.findAdvenced(marque, model, puissancefiscale, cylindre, puissancemoteur, cassis, nombreporte, nombreplace, Util.parseToDate(miseencirculation));
             return new ResponseEntity<>(new Result("OK", "", voitures), HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(new Result("Failed", e.getMessage(), ""), HttpStatus.OK);
