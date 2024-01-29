@@ -1,5 +1,6 @@
 package okazy.service.stat;
 
+import okazy.model.Vente;
 import okazy.model.stat.VenteAVG;
 import okazy.repository.stat.VenteAVGRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class VenteAVGService {
     }
 
     public List<VenteAVG> findAll() {
-        return this.venteAVGRepository.findAll();
+        List<VenteAVG> venteAVGS = this.venteAVGRepository.findAll();
+
+        for (VenteAVG v : venteAVGS) {
+            v.setStr_mois(v.getMois(v.getMois()));
+        }
+
+        return venteAVGS;
     }
 }
