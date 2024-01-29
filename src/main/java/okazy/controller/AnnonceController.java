@@ -117,6 +117,12 @@ public class AnnonceController {
         return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
     }
 
+    @GetMapping("/valides/count")
+    public ResponseEntity<Result> findAllValideCount() {
+        List<Annonce> annonces = this.annonceService.findAllValide();
+        return new ResponseEntity<>(new Result("OK","", annonces.size()), HttpStatus.OK);
+    }
+
     @GetMapping("/nonvalides")
     public ResponseEntity<Result> findAllNonValide() {
         List<Annonce> annonces = this.annonceService.findAllNonValide();
