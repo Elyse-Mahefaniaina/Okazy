@@ -6,6 +6,7 @@ import okazy.repository.user.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,4 +37,8 @@ public class UtilisateurService {
         return this.utilisateurRepository.save(utilisateur);
     }
 
+    public List<Utilisateur> findAll(){
+        return this.utilisateurRepository.findAll();
+    }
 }
+

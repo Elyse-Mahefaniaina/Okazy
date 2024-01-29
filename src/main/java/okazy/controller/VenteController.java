@@ -1,7 +1,6 @@
 package okazy.controller;
 
 import okazy.model.Vente;
-import okazy.model.stat.VenteAVG;
 import okazy.result.Result;
 import okazy.service.VenteService;
 import org.springframework.beans.factory.annotation.Autowired;
