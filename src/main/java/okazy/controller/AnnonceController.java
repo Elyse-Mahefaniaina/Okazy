@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,12 +119,6 @@ public class AnnonceController {
         return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
     }
 
-    @GetMapping("/utilisateurs/{id}")
-    public ResponseEntity<Result> findAllByUser(int id) {
-        List<Annonce> annonces = this.annonceService.findAllByUser(id);
-        return new ResponseEntity<>(new Result("OK","", annonces), HttpStatus.OK);
-    }
-
     @GetMapping("/utilisateur")
     public ResponseEntity<Result> findAllByUser() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -150,7 +145,7 @@ public class AnnonceController {
         return new ResponseEntity<>(new Result("NOT FOUND", "Authenticated user not found", ""), HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}/validate")
+    @PutMapping("/validate/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Result> validate(@PathVariable int id){
         try {
@@ -161,7 +156,7 @@ public class AnnonceController {
         }
     }
 
-    @PutMapping("/{id}/vendre")
+    @PutMapping("/vendre/{id}")
     public ResponseEntity<Result> vendre(@PathVariable int id){
         try {
             Annonce annonce = this.annonceService.vendre(id);
