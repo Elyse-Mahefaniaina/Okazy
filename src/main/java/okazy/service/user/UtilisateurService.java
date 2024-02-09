@@ -1,6 +1,7 @@
 package okazy.service.user;
 
 import okazy.config.JWTManager;
+import okazy.model.user.Role;
 import okazy.model.user.Utilisateur;
 import okazy.repository.user.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class UtilisateurService {
     }
 
     public Utilisateur save(Utilisateur utilisateur) {
+        Role role = new Role();
+        role.setId(2);
+        utilisateur.setRole(role);
         return this.utilisateurRepository.save(utilisateur);
     }
 

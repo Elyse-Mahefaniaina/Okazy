@@ -3,7 +3,6 @@ package okazy.controller;
 import okazy.model.Annonce;
 import okazy.model.Favoris;
 import okazy.model.Vente;
-import okazy.model.stat.VenteAVG;
 import okazy.model.user.Utilisateur;
 import okazy.result.Result;
 import okazy.service.AnnonceService;
